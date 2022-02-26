@@ -9,7 +9,7 @@ def distance(x, y): # normalized hamming distance
     count = 0
     
     for xbit, ybit in zip(x, y):
-        if xbit != ybit: count = count + 1
+        if xbit != ybit: count +=  1
     
     return count / len(x)
 
@@ -56,8 +56,7 @@ def reliable_bits(arr: np.ndarray, index: list):
     res = ''
     mean = arr.mean(axis = 0)
 
-    for each in mean[index]:
-        if each > 0: res += '1'
-        if each < 0: res += '0'
+    for val in mean[index]:
+        res += '0' if val <= 0 else '1'
     
     return res

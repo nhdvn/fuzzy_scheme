@@ -49,7 +49,7 @@ def generate_key(row: list, start: int):
     entry = udata[row[:start]]
     index = reliable_index(entry)
     entry = reliable_bits(entry, index)
-    value = extractor.generate(entry)
+    value = fuzzy.generate(entry)
     return value, index 
 
 
@@ -57,7 +57,7 @@ def reproduce_key(row: list, index: list, start: int, step: int):
 
     entry = udata[row[start: start + step]]
     entry = reliable_bits(entry, index)
-    return extractor.reproduce(entry)
+    return fuzzy.reproduce(entry)
 
 
 def false_rate(key: bytes, row: list, idx: list, relate):
@@ -80,8 +80,7 @@ def mean_false_rate():
 
     for rate in [0.20, 0.25, 0.30]:
 
-        global extractor
-        extractor = SampleLock(rate, 512)
+        global fuzzy; fuzzy = SampleLock(rate, 512)
 
         for ix, arr in user.items():
 
