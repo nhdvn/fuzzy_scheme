@@ -236,4 +236,5 @@ def visualize():
     plt.savefig(f'histogram_{name}.png')
 
 
-multi_error_rate()
+multi_count_distance()
+visualize()

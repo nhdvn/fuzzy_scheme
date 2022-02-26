@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mtk
 
 
-def visualize():
+def visualize(jdata: str, ifile: str):
 
-    error = json.load(open(f'error.json', 'r'))
+    error = json.load(open(jdata, 'r'))
 
     intra = error['intra']
     inter = error['inter']
@@ -20,4 +20,4 @@ def visualize():
     plt.legend(['Intra', 'Inter'])
 
     plt.gca().yaxis.set_major_formatter(mtk.PercentFormatter(1))
-    plt.savefig(f'histogram.png')
+    plt.savefig(ifile)

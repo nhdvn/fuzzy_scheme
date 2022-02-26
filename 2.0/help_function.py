@@ -1,14 +1,24 @@
 
 import json, numpy as np
 
-udata = np.genfromtxt('.gait_dataset', delimiter = ',')
+udata = np.genfromtxt('../data/gait_dataset', delimiter = ',')
 
 
-def save_error(intra, inter):
+def distance(x, y): # normalized hamming distance
+    
+    count = 0
+    
+    for xbit, ybit in zip(x, y):
+        if xbit != ybit: count = count + 1
+    
+    return count / len(x)
+
+
+def save_error(intra, inter, filename: str):
     
     obj = {'intra': intra, 'inter': inter}
 
-    with open(f'error.json', 'w') as outfile:
+    with open(filename, 'w') as outfile:
 
         json.dump(obj, outfile, indent = 4)
 
@@ -18,11 +28,12 @@ def enumerate_users() -> dict:
     result = {}
 
     for row, data in enumerate(udata):
+        
         user = int(data[-1]) 
-        if user in result:
-            result[user] += [row]
-        else:
-            result[user] = []
+        
+        if user not in result: result[user] = []
+        
+        result[user] += [row]
 
     return result
 

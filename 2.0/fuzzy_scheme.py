@@ -37,7 +37,7 @@ class SampleLock:
     def generate(self, bio: str):
 
         secret = secrets.token_bytes(self.nbytes)
-        helper = open('.helper_data', 'wb')
+        helper = open('../data/helper_data', 'wb')
 
         for _ in range(self.bound):
 
@@ -52,7 +52,7 @@ class SampleLock:
 
     def reproduce(self, bio: str):
 
-        helper = open('.helper_data', 'rb')
+        helper = open('../data/helper_data', 'rb')
 
         for _ in range(self.bound):
 

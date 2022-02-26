@@ -1,8 +1,8 @@
 
 from operator import *
 from help_function import *
-from error_distance import *
 from fuzzy_scheme import *
+from error_visualize import *
 
 n = 5 # number of entry
 k = 3 # number of valid
@@ -11,7 +11,9 @@ k = 3 # number of valid
 def mean_error_rate():
 
     user = enumerate_users()
-    intra = inter = []
+
+    intra = []
+    inter = []
 
     for ix, arr in user.items():
         
@@ -60,15 +62,15 @@ def reproduce_key(row: list, index: list, start: int, step: int):
 
 def false_rate(key: bytes, row: list, idx: list, relate):
 
-    size = len(row)
-    count = 0
+    rlen = len(row)
+    rate = 0
 
-    for i in range(n, size, k):
-        if i + k > size: break
+    for i in range(n, rlen, k):
+        if i + k > rlen: break
         if relate(key, reproduce_key(row, idx, i, k)):
-            count += 1
+            rate += 1
 
-    return count
+    return rate
 
 
 def mean_false_rate():
@@ -92,3 +94,14 @@ def mean_false_rate():
                 accept += false_rate(key, brr, idx, eq)
     
     return reject, accept
+
+
+def main():
+
+    jdata = '../json/error_0512.json'
+    ifile = '../plot/plot_0512.png'
+
+    intra, inter = mean_error_rate()
+    
+    save_error(intra, inter, jdata)
+    visualize(jdata, ifile)

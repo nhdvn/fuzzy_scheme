@@ -35,13 +35,4 @@ def read_user_templates() -> dict:
     return user_data
 
 
-# filter_templates()
-
-user = read_user_templates()
-res = {}
-for id, val in user.items():
-    if len(val) not in res:
-        res[len(val)] = 0
-    res[len(val)] += 1
-
-print(res)
+filter_templates()

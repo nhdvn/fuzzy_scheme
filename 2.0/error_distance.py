@@ -2,8 +2,6 @@
 from help_function import *
 
 qdata = []
-nbits = 512
-fname = format(nbits, '04d')
 
 
 def binarize_udata():
@@ -13,16 +11,6 @@ def binarize_udata():
     for row in udata:
         res = reliable_bits(row[:-1])
         qdata += [res]
-
-
-def distance(x, y): # hamming distance
-    
-    count = 0
-    
-    for xbit, ybit in zip(x, y):
-        if xbit != ybit: count = count + 1
-    
-    return count / nbits
 
 
 def intra_error(arr):
