@@ -13,42 +13,31 @@ class DigitalLocker:
         self.N = _N
         self.K = _K
         self.R = _R
+        self.P = bytes(self.N - self.K)
 
 
     def xor(self, b1: bytes, b2: bytes) -> bytes:
 
-        return bytes( [x1 ^ x2 for x1, x2 in zip(b1, b2)] )
+        val = int.from_bytes(b1, 'big') ^ int.from_bytes(b2, 'big')
+
+        return val.to_bytes(self.N, 'big')
 
 
     def lock(self, key: bytes, value: bytes) -> bytes:
 
-        nonce, vhash = self.hash(key)
+        nonce = secrets.token_bytes(self.R)
 
-        value = value.ljust(self.N, b'\x00')
+        vhash = hashlib.new('SHA224', nonce + key).digest()
 
-        vlock = self.xor(vhash, value)
-
-        return nonce + vlock
+        return nonce + self.xor(vhash, value + self.P)
 
 
     def unlock(self, key: bytes, data: bytes) -> bytes:
 
-        nonce = data[:self.R]
-        vlock = data[self.R:]
+        nonce, vlock = data[:self.R], data[self.R:]
 
-        nonce, vhash = self.hash(key, nonce)
-        value = self.xor(vhash, vlock)
+        vhash = hashlib.new('SHA224', nonce + key).digest()
 
-        if value[self.K:].rstrip(b'\x00'): return None
-        
-        return value[:self.K]
+        vlock = self.xor(vhash, vlock)
 
-
-    def hash(self, value: bytes, nonce: bytes = b'') -> tuple:
-        
-        if not nonce: 
-            nonce = secrets.token_bytes(self.R)
-
-        hash = hashlib.new('SHA224', nonce + value)
-
-        return nonce, hash.digest()
+        if vlock[self.K:] == self.P: return vlock[:self.K]

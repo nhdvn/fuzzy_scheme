@@ -1,5 +1,4 @@
 
-from operator import *
 from help_function import *
 from fuzzy_scheme import *
 from error_visualize import *
@@ -44,55 +43,47 @@ def mean_error_rate():
     return intra, inter
 
 
-def generate_key(row: list, start: int):
-
-    entry = udata[row[:start]]
-    index = reliable_index(entry)
-    entry = reliable_bits(entry, index)
-    value = fuzzy.generate(entry)
-    return value, index 
-
-
-def reproduce_key(row: list, index: list, start: int, step: int):
-
-    entry = udata[row[start: start + step]]
-    entry = reliable_bits(entry, index)
-    return fuzzy.reproduce(entry)
-
-
-def false_rate(key: bytes, row: list, idx: list, relate):
-
-    rlen = len(row)
-    rate = 0
-
-    for i in range(n, rlen, k):
-        if i + k > rlen: break
-        if relate(key, reproduce_key(row, idx, i, k)):
-            rate += 1
-
-    return rate
-
-
 def mean_false_rate():
 
     user = enumerate_users()
-    accept = reject = 0
+
+    intra = inter = 0
 
     for rate in [0.20, 0.25, 0.30]:
 
-        global fuzzy; fuzzy = SampleLock(rate, 512)
+        extractor = SampleLock(rate, 512)
+
+        print(f'extractor with error {rate}:')
 
         for ix, arr in user.items():
 
-            if n > len(arr): continue
-            key, idx = generate_key(arr, n)
-            reject += false_rate(key, arr, idx, ne)
+            size = len(arr)
+            if n > size: continue
+
+            entry = udata[arr[:n]]
+            index = reliable_index(entry)
+            entry = reliable_bits(entry, index)
+            entry = extractor.generate(entry)
+
+            for i in range(n, size, k):
+                if i + k > size: break
+                input = udata[arr[i: i + k]]
+                input = reliable_bits(input, index)
+                input = extractor.reproduce(input)
+                intra += (entry != input)
+
+            print(f'check user {ix} intra error: {intra}')
 
             for iv, brr in user.items():
                 if ix == iv: continue
-                accept += false_rate(key, brr, idx, eq)
+                input = udata[random.sample(brr, k)]
+                input = reliable_bits(input, index)
+                input = extractor.reproduce(input)
+                inter += (entry == input)
+
+                print(f'inter error with user {iv}: {inter}')
     
-    return reject, accept
+    return intra, inter
 
 
 def main():
@@ -104,3 +95,6 @@ def main():
     
     save_error(intra, inter, jdata)
     visualize(jdata, ifile)
+
+
+mean_false_rate()

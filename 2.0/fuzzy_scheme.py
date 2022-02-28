@@ -22,9 +22,9 @@ class SampleLock:
 
     def arr_to_bytes(self, bio: str, idx: list[int]):
 
-        arr = bytes.join(b'', [i.to_bytes(2, 'big') for i in idx])
+        idx_bytes = bytes.join(b'', [i.to_bytes(2, 'big') for i in idx])
 
-        return arr, self.bit_to_bytes(bio, idx)
+        return idx_bytes, self.bit_to_bytes(bio, idx)
 
 
     def arr_from_bytes(self, bio: str, arr: bytes):

@@ -7,18 +7,18 @@ from fuzzy_scheme import *
 extractor = SampleLock(0.2, 512)
 
 
-def generate_key(idx_template: list):
+def generate_key(row: list):
 
-    entry = udata[idx_template[:5]]
+    entry = udata[row[:5]]
     index = reliable_index(entry)
     entry = reliable_bits(entry, index)
     value = extractor.generate(entry)
     return value, index 
 
 
-def reproduce_key(idx_template: list, index: list):
+def reproduce_key(row: list, index: list):
 
-    entry = udata[idx_template[5:8]]
+    entry = udata[row[5:8]]
     entry = reliable_bits(entry, index)
     return extractor.reproduce(entry)
 
