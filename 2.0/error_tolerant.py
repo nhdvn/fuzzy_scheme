@@ -57,6 +57,7 @@ def mean_false_rate():
 
         for ix, arr in user.items():
 
+            if ix in [31]: continue
             size = len(arr)
             if n > size: continue
 
