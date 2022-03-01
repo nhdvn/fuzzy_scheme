@@ -3,6 +3,7 @@
 import time
 import pyautogui
 
+
 def clicker():
     x = 2700
     y = 550
@@ -18,8 +19,13 @@ def clicker():
         pyautogui.click(x, y)
         x += 450
 
-delay = 60 * 20
 
-while True:
-    clicker()
-    time.sleep(delay)
+def main():
+    delay = 60 * 20
+
+    while True:
+        clicker()
+        time.sleep(delay)
+
+
+main()
