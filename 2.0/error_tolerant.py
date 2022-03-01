@@ -44,7 +44,7 @@ def mean_error_rate():
     return intra, inter
 
 
-def mean_false_rate(val: int, ip: int):
+def mean_false_rate(usr_id: int, ip: int):
 
     users = enumerate_users()
 
@@ -58,17 +58,16 @@ def mean_false_rate(val: int, ip: int):
 
         for ix, arr in users.items():
 
-            if ix != val: continue
-            size = len(arr)
-            if n > size: continue
+            if ix != usr_id: continue
+            if n > len(arr): continue
 
             entry = udata[arr[:n]]
             index = reliable_index(entry)
             entry = reliable_bits(entry, index)
             entry = extractor.generate(entry)
 
-            for i in range(n, size, k):
-                if i + k > size: break
+            for i in range(n, len(arr), k):
+                if i + k > len(arr): break
                 input = udata[arr[i: i + k]]
                 input = reliable_bits(input, index)
                 input = extractor.reproduce(input)
@@ -78,7 +77,7 @@ def mean_false_rate(val: int, ip: int):
 
             sign = False
             for iv, brr in users.items():
-                if iv == ip: sign = True; continue
+                if iv == ip: sign = True
                 if not sign: continue
                 if ix == iv: continue
                 input = udata[random.sample(brr, k)]
