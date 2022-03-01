@@ -2,7 +2,7 @@
 import json, numpy as np
 
 
-_1024 = np.genfromtxt('1024.csv', delimiter = ',')
+_1024 = np.genfromtxt('../data/gait_dataset', delimiter = ',')
     
 
 def filter_templates():

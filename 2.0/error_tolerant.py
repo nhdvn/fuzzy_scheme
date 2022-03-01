@@ -1,4 +1,5 @@
 
+from sys import argv
 from help_function import *
 from fuzzy_scheme import *
 from error_visualize import *
@@ -9,12 +10,12 @@ k = 3 # number of valid
 
 def mean_error_rate():
 
-    user = enumerate_users()
+    users = enumerate_users()
 
     intra = []
     inter = []
 
-    for ix, arr in user.items():
+    for ix, arr in users.items():
         
         size = len(arr)
         if n > size: continue
@@ -29,7 +30,7 @@ def mean_error_rate():
             input = reliable_bits(input, index)
             intra += [distance(input, entry)]
 
-        for iv, brr in user.items():
+        for iv, brr in users.items():
 
             size = len(brr)
             if ix == iv: continue
@@ -43,9 +44,9 @@ def mean_error_rate():
     return intra, inter
 
 
-def mean_false_rate():
+def mean_false_rate(val: int, ip: int):
 
-    user = enumerate_users()
+    users = enumerate_users()
 
     intra = inter = 0
 
@@ -55,9 +56,9 @@ def mean_false_rate():
 
         print(f'extractor with error {rate}:')
 
-        for ix, arr in user.items():
+        for ix, arr in users.items():
 
-            if ix != 31: continue
+            if ix != val: continue
             size = len(arr)
             if n > size: continue
 
@@ -75,7 +76,10 @@ def mean_false_rate():
 
             print(f'check user {ix} intra error: {intra}')
 
-            for iv, brr in user.items():
+            sign = False
+            for iv, brr in users.items():
+                if iv == ip: sign = True; continue
+                if not sign: continue
                 if ix == iv: continue
                 input = udata[random.sample(brr, k)]
                 input = reliable_bits(input, index)
@@ -98,4 +102,4 @@ def main():
     visualize(jdata, ifile)
 
 
-mean_false_rate()
+mean_false_rate(int(argv[1]), int(argv[2]))

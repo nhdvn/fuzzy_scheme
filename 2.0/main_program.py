@@ -18,7 +18,7 @@ def generate_key(row: list):
 
 def reproduce_key(row: list, index: list):
 
-    entry = udata[row[5:8]]
+    entry = udata[row[0:3]]
     entry = reliable_bits(entry, index)
     return extractor.reproduce(entry)
 
@@ -26,18 +26,18 @@ def reproduce_key(row: list, index: list):
 def main():
 
     user = enumerate_users()
-    user_31 = user[31]
-    user_34 = user[34]
+    user_x = user[46]
+    user_v = user[100]
 
     start = time.time()
-    key, index = generate_key(user_31)
+    key, index = generate_key(user_x)
     finis = time.time()
 
     print(finis - start)
     print(key)
 
     start = time.time()    
-    key = reproduce_key(user_31, index)
+    key = reproduce_key(user_v, index)
     finis = time.time()
     
     print(finis - start)
