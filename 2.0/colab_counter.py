@@ -1,5 +1,5 @@
 
-import json, os, random, sys
+import os, sys
 from help_function import *
 from fuzzy_scheme import *
 from error_visualize import *
@@ -8,7 +8,7 @@ n = 5 # number of entry
 k = 3 # number of valid
 
 users = enumerate_users()
-ulist = users.keys()
+ulist = list(users.keys())
 
 ifile = "/content/drive/MyDrive/Index"
 inter = "/content/drive/MyDrive/Inter"
@@ -34,20 +34,18 @@ def update_file(usr, val = None):
     ufile.write(f'{usr}: {val}\n')
 
 
-def save_drive(arr: list):
-
-    open(ifile, 'w').write(arr)
+def save_drive(arr):
 
     os.system('cp /content/fuzzy_scheme/data/helper_data /content/drive/MyDrive/Helper')
+
+    open(ifile, 'w').write(str(list(arr)))
 
 
 def load_drive():
 
     os.system('cp /content/drive/MyDrive/Helper /content/fuzzy_scheme/data/helper_data')
 
-    array = open(ifile, 'r').read()
-
-    return json.loads(array)
+    return json.loads(open(ifile, 'r').read())
 
 
 def mean_false_rate(ix: int):
