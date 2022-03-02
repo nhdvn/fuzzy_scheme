@@ -1,6 +1,5 @@
 
-from os.path import isfile
-from random import sample
+import json, os, random, sys
 from help_function import *
 from fuzzy_scheme import *
 from error_visualize import *
@@ -10,17 +9,19 @@ k = 3 # number of valid
 
 users = enumerate_users()
 ulist = users.keys()
-ksize = 225
+
+ifile = "/content/drive/MyDrive/Index"
+inter = "/content/drive/MyDrive/Inter"
 ufile = None
 
 
 def iter_position(id: int):
     
-    dir = f'/content/drive/MyDrive/Inter/{id}'
+    dir = f"{inter}/{id}"
 
     global ufile
 
-    if isfile(dir):
+    if os.path.isfile(dir):
         ufile = open(dir, 'a')
         return len(open(dir, 'r').readlines())
 
@@ -33,26 +34,50 @@ def update_file(usr, val = None):
     ufile.write(f'{usr}: {val}\n')
 
 
-def mean_false_rate():
+def save_drive(arr: list):
+
+    open(ifile, 'w').write(arr)
+
+    os.system('cp /content/fuzzy_scheme/data/helper_data /content/drive/MyDrive/Helper')
+
+
+def load_drive():
+
+    os.system('cp /content/drive/MyDrive/Helper /content/fuzzy_scheme/data/helper_data')
+
+    array = open(ifile, 'r').read()
+
+    return json.loads(array)
+
+
+def mean_false_rate(ix: int):
 
     extractor = SampleLock(0.2, 512)
 
-    for ix, arr in users.items():
+    arr = users[ix]
+    if n > len(arr): return print('no need')
 
-        itr = iter_position(ix)
-        if itr == ksize: continue
-        if n > len(arr): continue
+    itr = iter_position(ix)
+    if itr == len(ulist): return print('finish')
 
+    if os.path.isfile(ifile):
+        index = load_drive()
+    else:
         entry = udata[arr[:n]]
         index = reliable_index(entry)
         entry = reliable_bits(entry, index)
         entry = extractor.generate(entry)
+        save_drive(index)
 
-        for iv in ulist[itr:]:
-            if ix == iv: 
-                update_file(iv)
-            else:
-                input = udata[sample(users[iv], k)]
-                input = reliable_bits(input, index)
-                input = extractor.reproduce(input)
-                update_file(iv, entry == input)
+    for iv in ulist[itr:]:
+        print(iv)
+        if ix == iv: 
+            update_file(iv)
+        else:
+            input = udata[random.sample(users[iv], k)]
+            input = reliable_bits(input, index)
+            input = extractor.reproduce(input)
+            update_file(iv, entry == input)
+
+
+mean_false_rate(int(sys.argv[1]))
