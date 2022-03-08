@@ -5,19 +5,19 @@ import pyautogui
 
 
 def clicker():
-    x = 2700
-    y = 550
+    x = 2670
+    y = 500
 
-    for _ in range(4):
+    for _ in range(6):
         pyautogui.click(x, y)
-        x += 500
+        x += 370
 
-    x = 2700
+    x = 2670
     y = 1200
 
-    for _ in range(4):
+    for _ in range(6):
         pyautogui.click(x, y)
-        x += 450
+        x += 370
 
 
 def main():
@@ -26,6 +26,10 @@ def main():
     while True:
         clicker()
         time.sleep(delay)
+
+
+def check():
+    print(pyautogui.position())
 
 
 main()
