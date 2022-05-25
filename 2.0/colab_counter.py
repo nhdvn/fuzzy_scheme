@@ -14,6 +14,9 @@ ifile = "/content/drive/MyDrive/Index"
 inter = "/content/drive/MyDrive/Inter"
 ufile = None
 
+run_save = "cp /content/fuzzy_scheme/data/helper_data /content/drive/MyDrive/Helper"
+run_load = "cp /content/drive/MyDrive/Helper /content/fuzzy_scheme/data/helper_data"
+
 
 def iter_position(id: int):
 
@@ -29,23 +32,23 @@ def iter_position(id: int):
     return 0
 
 
-def update_file(usr, val=None):
+def update_file(usr, val = None):
 
+    print(val)
+    
     ufile.write(f'{usr}: {val}\n')
 
 
 def save_drive(arr):
 
-    os.system(
-        'cp /content/fuzzy_scheme/data/helper_data /content/drive/MyDrive/Helper')
+    os.system(run_save)
 
     open(ifile, 'w').write(str(list(arr)))
 
 
 def load_drive():
 
-    os.system(
-        'cp /content/drive/MyDrive/Helper /content/fuzzy_scheme/data/helper_data')
+    os.system(run_load)
 
     return json.loads(open(ifile, 'r').read())
 
@@ -72,7 +75,7 @@ def mean_false_rate(ix: int):
         save_drive(index)
 
     for iv in ulist[itr:]:
-        print(iv)
+        print(iv, end = ' ')
         if ix == iv:
             update_file(iv)
         else:
