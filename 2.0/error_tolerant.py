@@ -4,8 +4,8 @@ from help_function import *
 from fuzzy_scheme import *
 from error_visualize import *
 
-n = 5 # number of entry
-k = 3 # number of valid
+n = 5  # number of entry
+k = 3  # number of valid
 
 
 def mean_error_rate():
@@ -16,16 +16,18 @@ def mean_error_rate():
     inter = []
 
     for ix, arr in users.items():
-        
+
         size = len(arr)
-        if n > size: continue
-        
+        if n > size:
+            continue
+
         entry = udata[arr[:n]]
         index = reliable_index(entry)
         entry = reliable_bits(entry, index)
 
         for i in range(n, size, k):
-            if i + k > size: break
+            if i + k > size:
+                break
             input = udata[arr[i: i + k]]
             input = reliable_bits(input, index)
             intra += [distance(input, entry)]
@@ -33,10 +35,12 @@ def mean_error_rate():
         for iv, brr in users.items():
 
             size = len(brr)
-            if ix == iv: continue
+            if ix == iv:
+                continue
 
             for i in range(0, size, k):
-                if i + k > size: break
+                if i + k > size:
+                    break
                 input = udata[brr[i: i + k]]
                 input = reliable_bits(input, index)
                 inter += [distance(input, entry)]
@@ -52,14 +56,16 @@ def mean_false_rate(usr_id: int, ip: int):
 
     for rate in [0.20, 0.25, 0.30]:
 
-        extractor = SampleLock(rate, 512)
+        extractor = SampleLock(rate, 256)
 
         print(f'extractor with error {rate}:')
 
         for ix, arr in users.items():
 
-            if ix != usr_id: continue
-            if n > len(arr): continue
+            if ix != usr_id:
+                continue
+            if n > len(arr):
+                continue
 
             entry = udata[arr[:n]]
             index = reliable_index(entry)
@@ -67,7 +73,8 @@ def mean_false_rate(usr_id: int, ip: int):
             entry = extractor.generate(entry)
 
             for i in range(n, len(arr), k):
-                if i + k > len(arr): break
+                if i + k > len(arr):
+                    break
                 input = udata[arr[i: i + k]]
                 input = reliable_bits(input, index)
                 input = extractor.reproduce(input)
@@ -77,26 +84,29 @@ def mean_false_rate(usr_id: int, ip: int):
 
             sign = False
             for iv, brr in users.items():
-                if iv == ip: sign = True
-                if not sign: continue
-                if ix == iv: continue
+                if iv == ip:
+                    sign = True
+                if not sign:
+                    continue
+                if ix == iv:
+                    continue
                 input = udata[random.sample(brr, k)]
                 input = reliable_bits(input, index)
                 input = extractor.reproduce(input)
                 inter += (entry == input)
 
                 print(f'inter error with user {iv}: {inter}')
-    
+
     return intra, inter
 
 
 def main():
 
-    jdata = '../json/error_0512.json'
-    ifile = '../plot/plot_0512.png'
+    jdata = '../json/error_0256.json'
+    ifile = '../plot/plot_0256.png'
 
     intra, inter = mean_error_rate()
-    
+
     save_error(intra, inter, jdata)
     visualize(jdata, ifile)
 

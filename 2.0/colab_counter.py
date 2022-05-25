@@ -1,11 +1,11 @@
-
-import os, sys
+import os
+import sys
 from help_function import *
 from fuzzy_scheme import *
 from error_visualize import *
 
-n = 5 # number of entry
-k = 3 # number of valid
+n = 5  # number of entry
+k = 3  # number of valid
 
 users = enumerate_users()
 ulist = list(users.keys())
@@ -16,7 +16,7 @@ ufile = None
 
 
 def iter_position(id: int):
-    
+
     dir = f"{inter}/{id}"
 
     global ufile
@@ -29,34 +29,38 @@ def iter_position(id: int):
     return 0
 
 
-def update_file(usr, val = None):
+def update_file(usr, val=None):
 
     ufile.write(f'{usr}: {val}\n')
 
 
 def save_drive(arr):
 
-    os.system('cp /content/fuzzy_scheme/data/helper_data /content/drive/MyDrive/Helper')
+    os.system(
+        'cp /content/fuzzy_scheme/data/helper_data /content/drive/MyDrive/Helper')
 
     open(ifile, 'w').write(str(list(arr)))
 
 
 def load_drive():
 
-    os.system('cp /content/drive/MyDrive/Helper /content/fuzzy_scheme/data/helper_data')
+    os.system(
+        'cp /content/drive/MyDrive/Helper /content/fuzzy_scheme/data/helper_data')
 
     return json.loads(open(ifile, 'r').read())
 
 
 def mean_false_rate(ix: int):
 
-    extractor = SampleLock(0.2, 512)
+    extractor = SampleLock(0.2, 256)
 
     arr = users[ix]
-    if n > len(arr): return print('no need')
+    if n > len(arr):
+        return print('no need')
 
     itr = iter_position(ix)
-    if itr == len(ulist): return print('finish')
+    if itr == len(ulist):
+        return print('finish')
 
     if os.path.isfile(ifile):
         index = load_drive()
@@ -69,7 +73,7 @@ def mean_false_rate(ix: int):
 
     for iv in ulist[itr:]:
         print(iv)
-        if ix == iv: 
+        if ix == iv:
             update_file(iv)
         else:
             input = udata[random.sample(users[iv], k)]

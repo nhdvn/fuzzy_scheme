@@ -13,7 +13,7 @@ def generate_key(row: list):
     index = reliable_index(entry)
     entry = reliable_bits(entry, index)
     value = extractor.generate(entry)
-    return value, index 
+    return value, index
 
 
 def reproduce_key(row: list, index: list):
@@ -36,10 +36,10 @@ def main():
     print(finis - start)
     print(key)
 
-    start = time.time()    
+    start = time.time()
     key = reproduce_key(user_v, index)
     finis = time.time()
-    
+
     print(finis - start)
     print(key)
 
