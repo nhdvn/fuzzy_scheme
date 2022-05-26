@@ -10,12 +10,13 @@ k = 3  # number of valid
 users = enumerate_users()
 ulist = list(users.keys())
 
+ibyte = "/content/drive/MyDrive/Entry"
 ifile = "/content/drive/MyDrive/Index"
 inter = "/content/drive/MyDrive/Inter"
 ufile = None
 
-run_save = "cp /content/fuzzy_scheme/data/helper_data /content/drive/MyDrive/Helper"
-run_load = "cp /content/drive/MyDrive/Helper /content/fuzzy_scheme/data/helper_data"
+save_helper = "cp /content/fuzzy_scheme/data/helper_data /content/drive/MyDrive/Helper"
+load_helper = "cp /content/drive/MyDrive/Helper /content/fuzzy_scheme/data/helper_data"
 
 
 def iter_position(id: int):
@@ -39,18 +40,24 @@ def update_file(usr, val = None):
     ufile.write(f'{usr}: {val}\n')
 
 
-def save_drive(arr):
+def save_drive(arr, entry: bytes):
 
-    os.system(run_save)
+    os.system(save_helper)
+
+    open(ibyte, 'wb').write(entry)
 
     open(ifile, 'w').write(str(list(arr)))
 
 
 def load_drive():
 
-    os.system(run_load)
+    os.system(load_helper)
 
-    return json.loads(open(ifile, 'r').read())
+    entry = open(ibyte, 'rb').read()
+
+    arr = json.loads(open(ifile, 'r').read())
+
+    return arr, entry
 
 
 def mean_false_rate(ix: int):
@@ -66,13 +73,13 @@ def mean_false_rate(ix: int):
         return print('finish')
 
     if os.path.isfile(ifile):
-        index = load_drive()
+        index, entry = load_drive()
     else:
         entry = udata[arr[:n]]
         index = reliable_index(entry)
         entry = reliable_bits(entry, index)
         entry = extractor.generate(entry)
-        save_drive(index)
+        save_drive(index, entry)
 
     for iv in ulist[itr:]:
         print(iv, end = ' ')

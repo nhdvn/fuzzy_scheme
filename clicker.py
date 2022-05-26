@@ -8,16 +8,16 @@ def clicker():
     x = 2670
     y = 500
 
-    for _ in range(6):
+    for i in range(6):
         pyautogui.click(x, y)
-        x += 370
+        x += 390
 
     x = 2670
     y = 1200
 
     for _ in range(6):
         pyautogui.click(x, y)
-        x += 370
+        x += 390
 
 
 def main():
