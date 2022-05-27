@@ -10,13 +10,15 @@ k = 3  # number of valid
 users = enumerate_users()
 ulist = list(users.keys())
 
+inter = "/content/drive/MyDrive/Inter"
 ibyte = "/content/drive/MyDrive/Entry"
 ifile = "/content/drive/MyDrive/Index"
-inter = "/content/drive/MyDrive/Inter"
+ihelp = "/content/drive/MyDrive/Helper"
+hdata = "/content/fuzzy_scheme/data/helper_data"
 ufile = None
 
-save_helper = "cp /content/fuzzy_scheme/data/helper_data /content/drive/MyDrive/Helper"
-load_helper = "cp /content/drive/MyDrive/Helper /content/fuzzy_scheme/data/helper_data"
+save_helper = f"cp {hdata} {ihelp}"
+load_helper = f"cp {ihelp} {hdata}"
 
 
 def iter_position(id: int):
@@ -65,12 +67,19 @@ def mean_false_rate(ix: int):
     extractor = SampleLock(0.2, 256)
 
     arr = users[ix]
+    
     if n > len(arr):
         return print('no need')
 
     itr = iter_position(ix)
+    
     if itr == len(ulist):
         return print('finish')
+    
+    if itr == 0:
+        os.remove(ifile)
+        os.remove(ibyte)
+        os.remove(ihelp)
 
     if os.path.isfile(ifile):
         index, entry = load_drive()
