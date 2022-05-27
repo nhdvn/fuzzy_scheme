@@ -35,10 +35,10 @@ def iter_position(id: int):
     return 0
 
 
-def update_file(usr, val = None):
+def update_file(usr, val=None):
 
     print(val)
-    
+
     ufile.write(f'{usr}: {val}\n')
 
 
@@ -67,19 +67,22 @@ def mean_false_rate(ix: int):
     extractor = SampleLock(0.2, 256)
 
     arr = users[ix]
-    
+
     if n > len(arr):
         return print('no need')
 
     itr = iter_position(ix)
-    
+
     if itr == len(ulist):
         return print('finish')
-    
+
     if itr == 0:
-        os.remove(ifile)
-        os.remove(ibyte)
-        os.remove(ihelp)
+        if os.path.exists(ifile):
+            os.remove(ifile)
+        if os.path.exists(ibyte):
+            os.remove(ibyte)
+        if os.path.exists(ihelp):
+            os.remove(ihelp)
 
     if os.path.isfile(ifile):
         index, entry = load_drive()
@@ -91,7 +94,7 @@ def mean_false_rate(ix: int):
         save_drive(index, entry)
 
     for iv in ulist[itr:]:
-        print(iv, end = ' ')
+        print(iv, end=' ')
         if ix == iv:
             update_file(iv)
         else:
