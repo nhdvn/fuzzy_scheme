@@ -9,23 +9,23 @@ class VoiceCryptoSystem:
         
         self.template_size = size
         self.reliable_size = size >> 1
-        self.extractor = FuzzyScheme.SampleLock(0.2, size >> 1)
-        self.storage = {}
+        self.extractor = FuzzyScheme.SampleLock(3, 0.2, size >> 1)
+        self.ivstorage = {}
 
 
-    def enroll_user(self, uid: int, vdata: list):
+    def enroll_user(self, user: int, vdata: numpy.ndarray):
 
         index = self.select_reliable_index(vdata)
-        self.storage[uid] = index
+        self.ivstorage[user] = index
         input = self.extract_reliable_bits(vdata, index)
-        return self.extractor.key_generate(uid, input)
+        return self.extractor.key_generate(user, input)
 
 
-    def verify_user(self, uid: int, vdata: list):
+    def verify_user(self, user: int, vdata: numpy.ndarray):
 
-        index = self.storage[uid]
+        index = self.ivstorage[user]
         input = self.extract_reliable_bits(vdata, index)
-        return self.extractor.key_reproduce(uid, input)
+        return self.extractor.key_reproduce(user, input)
 
 
     def select_reliable_index(self, vdata: numpy.ndarray):

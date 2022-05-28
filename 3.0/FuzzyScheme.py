@@ -1,6 +1,7 @@
 
-import math
 import hashlib
+import math
+import multiprocessing
 import os
 import random
 
@@ -12,7 +13,6 @@ class DigitalLocker:
         self.N = _N # 28 bytes - 224 bits hash
         self.K = _K # 16 bytes - 128 bits secret
         self.R = _R # 18 bytes - 144 bits nonce
-        
         self.P = bytes(self.N - self.K)
 
 
@@ -46,14 +46,15 @@ class DigitalLocker:
 
 class SampleLock:
 
-    def __init__(self, rate, size):
+    def __init__(self, div, rate, size):
 
         self.locker = DigitalLocker(28, 16, 18)
+        self.div_size = div
         self.key_size = 16
         self.sub_size = 80
         self.pub_size = 126 # = 80 + 46
         
-        self.bound = math.floor(math.exp(rate * self.sub_size))
+        self.bound = math.floor(math.exp(rate * self.sub_size)) // div
         self.range = range(size)
 
 
@@ -74,38 +75,68 @@ class SampleLock:
         return self.bits_to_bytes(bio, [i for i in arr])
 
 
-    def random_subset(self):
-
-        return random.sample(self.range, self.sub_size)
-
-
-    def key_generate(self, ID: int, bio: str):
+    def key_generate(self, user: int, bio: str):
 
         secret = os.urandom(self.key_size)
-        helper = open(f"./Helper_{ID}", "wb")
+        handler = multiprocessing.Pool(self.div_size)
+        
+        for i in range(self.div_size):
+            params = (user, bio, i, secret)
+            handler.apply_async(self.worker_gen, params)
+
+        handler.close()
+        handler.join()
+        return secret
+
+    
+    def key_reproduce(self, user: int, bio: str):
+
+        manager = multiprocessing.Manager()
+        handler = multiprocessing.Pool(self.div_size)
+        
+        result = manager.dict()
+        event = manager.Event()
+        event.set()
+
+        for i in range(self.div_size):
+            params = (user, bio, i, event, result)
+            handler.apply_async(self.worker_rep, params)
+
+        handler.close()
+        handler.join()
+
+        for secret in result.values():
+            if secret != None: return secret
+        return None
+
+
+    def worker_gen(self, user: int, input: str, nth: int, secret: bytes):
+
+        helper = open(f"./Helper_{user}_{nth}", "wb")
 
         for _ in range(self.bound):
 
-            idx = self.random_subset()
-            idx, sub = self.array_to_bytes(idx, bio)
-            vlocked = self.locker.lock(sub, secret)
-            helper.write(idx + vlocked)
+            index = random.sample(self.range, self.sub_size)
+            index, subset = self.array_to_bytes(index, input)
+            vlock = self.locker.lock(subset, secret)
+            helper.write(index + vlock)
 
         helper.close()
-        return secret
 
 
-    def key_reproduce(self, ID: int, bio: str):
+    def worker_rep(self, user: int, input: str, nth: int, event, result: dict):
 
-        helper = open(f"./Helper_{ID}", "rb")
+        helper = open(f"./Helper_{user}_{nth}", "rb")
 
         while block := helper.read(self.pub_size):
             
-            idx = block[:self.sub_size]
-            val = block[self.sub_size:]
-            sub = self.public_to_bytes(idx, bio)
-            secret = self.locker.unlock(sub, val)
-            if secret != None: break
+            index = block[:self.sub_size]
+            vlock = block[self.sub_size:]
+            subset = self.public_to_bytes(index, input)
+            secret = self.locker.unlock(subset, vlock)
+            
+            if secret != None: event.clear()
+            if event.is_set() != True: break
 
         helper.close()
-        return secret
+        result[nth] = secret
