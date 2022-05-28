@@ -28,10 +28,10 @@ def iter_position(id: int):
     global ufile
 
     if os.path.isfile(dir):
-        ufile = open(dir, 'ab', 0)
+        ufile = open(dir, 'a')
         return len(open(dir, 'r').readlines())
 
-    ufile = open(dir, 'wb', 0)
+    ufile = open(dir, 'w')
     return 0
 
 
