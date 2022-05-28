@@ -41,6 +41,8 @@ def update_file(usr, val = None):
     
     ufile.write(f'{usr}: {val}\n')
 
+    ufile.flush()
+
 
 def save_drive(arr, entry: bytes):
 
