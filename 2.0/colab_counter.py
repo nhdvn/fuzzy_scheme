@@ -28,10 +28,10 @@ def iter_position(id: int):
     global ufile
 
     if os.path.isfile(dir):
-        ufile = open(dir, 'a', 0)
+        ufile = open(dir, 'ab', 0)
         return len(open(dir, 'r').readlines())
 
-    ufile = open(dir, 'w', 0)
+    ufile = open(dir, 'wb', 0)
     return 0
 
 
@@ -39,7 +39,7 @@ def update_file(usr, val = None):
 
     print(val)
     
-    ufile.write(f'{usr}: {val}\n')
+    ufile.write(f'{usr}: {val}\n'.encode())
 
 
 def save_drive(arr, entry: bytes):
