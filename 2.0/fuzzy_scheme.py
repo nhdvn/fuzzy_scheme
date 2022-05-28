@@ -55,7 +55,7 @@ class SampleLock:
         for _ in range(self.bound):
 
             block = helper.read(126)
-            idx, val = block[:126], block[126:]
+            idx, val = block[:80], block[80:]
             sub = self.arr_from_bytes(bio, idx)
             secret = self.locker.unlock(sub, val)
 
