@@ -17,21 +17,19 @@ class SampleLock:
 
     def bit_to_bytes(self, bio: str, idx: list):
 
-        return int(str.join('', [bio[i] for i in idx]), 2).to_bytes(10, 'big')
+        subset = "".join([bio[i] for i in idx])
+
+        return int(subset, 2).to_bytes(10, "big")
 
 
     def arr_to_bytes(self, bio: str, idx: list):
 
-        idx_bytes = bytes.join(b'', [i.to_bytes(2, 'big') for i in idx])
-
-        return idx_bytes, self.bit_to_bytes(bio, idx)
+        return bytes(idx), self.bit_to_bytes(bio, idx)
 
 
     def arr_from_bytes(self, bio: str, arr: bytes):
 
-        idx = [int.from_bytes(arr[i: i + 2], 'big') for i in range(0, 160, 2)]
-
-        return self.bit_to_bytes(bio, idx)
+        return self.bit_to_bytes(bio, [i for i in arr])
 
 
     def generate(self, bio: str):
@@ -56,8 +54,8 @@ class SampleLock:
 
         for _ in range(self.bound):
 
-            block = helper.read(206)
-            idx, val = block[:160], block[160:]
+            block = helper.read(126)
+            idx, val = block[:80], block[80:]
             sub = self.arr_from_bytes(bio, idx)
             secret = self.locker.unlock(sub, val)
 
