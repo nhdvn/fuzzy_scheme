@@ -3,20 +3,22 @@ import numpy
 import random
 
 
-class VoiceTemplate:
+class VoiceTemplateLoader:
 
     def __init__(self):
 
-        self.udata = numpy.genfromtxt("../data/The", delimiter = ',')
-        
-        self.ulist = self.enumerate_users()
+        self.ndata = numpy.genfromtxt("../data/The", delimiter = ',')
+
+        self.dlist = self.enumerate_data()
+
+        self.ulist = list(self.dlist.keys())
 
 
-    def enumerate_users(self) -> dict:
+    def enumerate_data(self) -> dict:
 
         res = {}
-        
-        for i, row in enumerate(self.udata):
+
+        for i, row in enumerate(self.ndata):
 
             u = int(row[-1])
 
@@ -27,8 +29,9 @@ class VoiceTemplate:
         return res
 
 
-    def load_user_template(self, uid: int, k: int) -> list:
+    def load_user_data(self, uid: int, n: int):
 
-        index = self.ulist[uid]
-        
-        return self.udata[random.sample(index, k)]
+        rlist = self.dlist[uid]
+
+        return self.ndata[random.sample(rlist, n)]
+
