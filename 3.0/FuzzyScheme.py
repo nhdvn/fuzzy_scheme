@@ -128,10 +128,12 @@ class SampleLock:
 
         helper = open(f"./Helper_{user}_{nth}", "rb")
 
-        while block := helper.read(self.pub_size):
-            
+        for _ in range(self.bound):
+
+            block = helper.read(self.pub_size)
             index = block[:self.sub_size]
             vlock = block[self.sub_size:]
+            
             subset = self.public_to_bytes(index, input)
             secret = self.locker.unlock(subset, vlock)
             
