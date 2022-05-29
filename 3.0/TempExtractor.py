@@ -29,7 +29,7 @@ class VoiceTemplateLoader:
         return res
 
 
-    def load_user_data(self, uid: int, n: int):
+    def load_user_data(self, uid: int, n: int) -> list:
 
         rlist = self.dlist[uid]
 

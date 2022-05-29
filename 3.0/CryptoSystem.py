@@ -5,11 +5,11 @@ import FuzzyScheme
 
 class VoiceCryptoSystem:
 
-    def __init__(self, size):
+    def __init__(self):
         
-        self.template_size = size
-        self.reliable_size = size >> 1
-        self.extractor = FuzzyScheme.SampleLock(3, 0.2, size >> 1)
+        self.template_size = 512
+        self.reliable_size = 256
+        self.extractor = FuzzyScheme.SampleLock(2, 0.2, 256)
         self.ivstorage = {}
 
 
