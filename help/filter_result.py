@@ -1,7 +1,7 @@
 import os
 
-dir = "Inter/"
-result = "inter.txt"
+dir = "inter/"
+result = "inter_error.txt"
 resultFile = open(result, "w")
 
 for root, subdirectories, files in os.walk(dir):
