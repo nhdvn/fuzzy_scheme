@@ -2,7 +2,7 @@
 import json
 import numpy as np
 
-udata = np.genfromtxt('../data/The', delimiter=',')
+udata = np.genfromtxt('../data/Nhut', delimiter=',')
 
 
 def distance(x, y):  # normalized hamming distance
@@ -31,7 +31,7 @@ def enumerate_users() -> dict:
 
     for row, data in enumerate(udata):
 
-        user = int(data[-1])
+        user = int(data[0])
 
         if user not in result:
             result[user] = []
@@ -45,7 +45,7 @@ def reliable_index(data: np.ndarray):
 
     result = []
 
-    for i in range(512):
+    for i in range(256):
         mean = data[:, i].mean()
         diff = data[:, i] - mean
         sqrs = (diff ** 2).sum()
@@ -58,6 +58,18 @@ def reliable_bits(arr: np.ndarray, index: list):
 
     res = ''
     mean = arr.mean(axis=0)
+
+    for val in mean[index]:
+        res += '0' if val <= 0 else '1'
+
+    return res
+
+
+def binarization(arr: np.ndarray):
+
+    res = ''
+    mean = arr.mean(axis=0)
+    index = range(1, 257)
 
     for val in mean[index]:
         res += '0' if val <= 0 else '1'

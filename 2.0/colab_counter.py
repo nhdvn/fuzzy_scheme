@@ -12,7 +12,6 @@ ulist = list(users.keys())
 
 inter = "/content/drive/MyDrive/Inter"
 ibyte = "/content/drive/MyDrive/Entry"
-ifile = "/content/drive/MyDrive/Index"
 ihelp = "/content/drive/MyDrive/Helper"
 hdata = "/content/fuzzy_scheme/data/helper_data"
 ufile = None
@@ -42,13 +41,11 @@ def update_file(usr, val=None):
     ufile.write(f'{usr}: {val}\n')
 
 
-def save_drive(arr, entry: bytes):
+def save_drive(entry: bytes):
 
     os.system(save_helper)
 
     open(ibyte, 'wb').write(entry)
-
-    open(ifile, 'w').write(str(list(arr)))
 
 
 def load_drive():
@@ -57,9 +54,7 @@ def load_drive():
 
     entry = open(ibyte, 'rb').read()
 
-    arr = json.loads(open(ifile, 'r').read())
-
-    return arr, entry
+    return entry
 
 
 def mean_false_rate(ix: int):
@@ -77,21 +72,18 @@ def mean_false_rate(ix: int):
         return print('finish')
 
     if itr == 0:
-        if os.path.exists(ifile):
-            os.remove(ifile)
         if os.path.exists(ibyte):
             os.remove(ibyte)
         if os.path.exists(ihelp):
             os.remove(ihelp)
 
-    if os.path.isfile(ifile):
-        index, entry = load_drive()
+    if os.path.isfile(ibyte):
+        entry = load_drive()
     else:
         entry = udata[arr[:n]]
-        index = reliable_index(entry)
-        entry = reliable_bits(entry, index)
+        entry = binarization(entry)
         entry = extractor.generate(entry)
-        save_drive(index, entry)
+        save_drive(entry)
 
     for iv in ulist[itr:]:
         print(iv, end=' ')
@@ -99,7 +91,7 @@ def mean_false_rate(ix: int):
             update_file(iv)
         else:
             input = udata[random.sample(users[iv], k)]
-            input = reliable_bits(input, index)
+            input = binarization(input)
             input = extractor.reproduce(input)
             update_file(iv, entry == input)
 
