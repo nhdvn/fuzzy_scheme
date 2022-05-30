@@ -90,6 +90,9 @@ def mean_false_rate(ix: int):
         if ix == iv:
             update_file(iv)
         else:
+            if len(users[iv]) < k:
+                update_file(iv, 'no need')
+                continue
             input = udata[random.sample(users[iv], k)]
             input = binarization(input)
             input = extractor.reproduce(input)
