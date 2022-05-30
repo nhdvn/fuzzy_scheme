@@ -10,7 +10,7 @@ k = 3  # number of valid
 users = enumerate_users()
 ulist = list(users.keys())
 
-inter = "/content/drive/MyDrive/Inter"
+inter = "/content/drive/MyDrive/Inter_Nhut"
 ibyte = "/content/drive/MyDrive/Entry"
 ihelp = "/content/drive/MyDrive/Helper"
 hdata = "/content/fuzzy_scheme/data/helper_data"
