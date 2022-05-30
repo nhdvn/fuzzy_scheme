@@ -2,7 +2,7 @@
 import json
 import numpy as np
 
-udata = np.genfromtxt('../data/voice_features.txt', delimiter=',')
+udata = np.genfromtxt('../data/Nhut', delimiter=',')
 
 
 def distance(x, y):  # normalized hamming distance

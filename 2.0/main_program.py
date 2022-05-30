@@ -26,7 +26,7 @@ def reproduce_key(row: list, index: list):
 def main():
 
     user = enumerate_users()
-    print(list(user.keys()))
+    print(sorted(list(user.keys())))
     return
 
     start = time.time()
