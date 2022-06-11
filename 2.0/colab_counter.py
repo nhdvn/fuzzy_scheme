@@ -4,13 +4,13 @@ from help_function import *
 from fuzzy_scheme import *
 from error_visualize import *
 
-n = 5  # number of entry
-k = 3  # number of valid
+n = 2  # number of entry
+k = 1  # number of valid
 
 users = enumerate_users()
 ulist = list(users.keys())
 
-inter = "/content/drive/MyDrive/Inter"
+inter = "/content/drive/MyDrive/Inter/Inter_Timit"
 ibyte = "/content/drive/MyDrive/Entry"
 ifile = "/content/drive/MyDrive/Index"
 ihelp = "/content/drive/MyDrive/Helper"
