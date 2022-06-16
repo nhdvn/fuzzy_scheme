@@ -1,15 +1,15 @@
 import os
 
-dir = "../inter_nhut/"
+dir = "inter/"
 result = "inter_error.txt"
 resultFile = open(result, "w")
 
 for root, subdirectories, files in os.walk(dir):
     for file in files:
-        with open(os.path.join(root, file), "r", errors='ignore') as f:
+        with open(os.path.join(root, file), "r") as f:
             Lines = f.readlines()
 
-            if (len(Lines) != 139):
+            if (len(Lines) != 117):
                 print(file)
 
             for line in Lines:
