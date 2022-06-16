@@ -26,8 +26,9 @@ def reproduce_key(row: list, index: list):
 def main():
 
     user = enumerate_users()
-    user_x = user[46]
-    user_v = user[100]
+    for i in sorted(list(user.keys())):
+        print(i, len(user[i]))
+    return
 
     start = time.time()
     key, index = generate_key(user_x)

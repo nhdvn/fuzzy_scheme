@@ -22,14 +22,13 @@ def mean_error_rate():
             continue
 
         entry = udata[arr[:n]]
-        index = reliable_index(entry)
-        entry = reliable_bits(entry, index)
+        entry = binarization(entry)
 
         for i in range(n, size, k):
             if i + k > size:
                 break
             input = udata[arr[i: i + k]]
-            input = reliable_bits(input, index)
+            input = binarization(input)
             intra += [distance(input, entry)]
 
         for iv, brr in users.items():
@@ -42,7 +41,7 @@ def mean_error_rate():
                 if i + k > size:
                     break
                 input = udata[brr[i: i + k]]
-                input = reliable_bits(input, index)
+                input = binarization(input)
                 inter += [distance(input, entry)]
 
     return intra, inter
@@ -111,4 +110,5 @@ def main():
     visualize(jdata, ifile)
 
 
-mean_false_rate(int(argv[1]), int(argv[2]))
+main()
+# mean_false_rate(int(argv[1]), int(argv[2]))
