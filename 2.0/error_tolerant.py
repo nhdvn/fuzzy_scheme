@@ -102,8 +102,8 @@ def mean_false_rate(usr_id: int, ip: int):
 
 def main():
 
-    jdata = '../json/error_0256.json'
-    ifile = '../plot/plot_0256.png'
+    jdata = '../json/error_timit.json'
+    ifile = '../plot/plot_timit.png'
 
     intra, inter = mean_error_rate()
 

@@ -23,7 +23,10 @@ def visualize(jdata: str, ifile: str):
     plt.gca().yaxis.set_major_formatter(mtk.PercentFormatter(1))
     plt.savefig(ifile)
 
+
+
 def visualize_The(jdata: str, ifile: str, bin_range: float, bin_width: float, xmax: float, ymax: float):
+
     plt.rcParams["figure.figsize"] = [7.00, 3.50]
     plt.rcParams["figure.autolayout"] = True
     fig, ax = plt.subplots()
@@ -34,10 +37,8 @@ def visualize_The(jdata: str, ifile: str, bin_range: float, bin_width: float, xm
     inter = error['inter']
 
     sns.set(style="darkgrid")
-    sns.histplot(intra, binrange=(0, bin_range), binwidth=bin_width, ax=ax, kde=False, stat='probability',
-                 label='intra', color='blue')
-    sns.histplot(inter, binrange=(0, bin_range), binwidth=bin_width, ax=ax, kde=False, stat='probability',
-                 label='inter', color='gold')
+    sns.histplot(intra, binrange=(0, bin_range), binwidth=bin_width, ax=ax, kde=False, stat='probability', label='intra', color='blue')
+    sns.histplot(inter, binrange=(0, bin_range), binwidth=bin_width, ax=ax, kde=False, stat='probability', label='inter', color='gold')
 
     plt.legend()
     plt.grid(True)
