@@ -4,8 +4,8 @@ from help_function import *
 from fuzzy_scheme import *
 from error_visualize import *
 
-n = 5  # number of entry
-k = 3  # number of valid
+n = 2  # number of entry
+k = 1  # number of valid
 
 
 def mean_error_rate():
@@ -108,7 +108,9 @@ def main():
     intra, inter = mean_error_rate()
 
     save_error(intra, inter, jdata)
-    visualize(jdata, ifile)
+    # visualize(jdata, ifile)
+    visualize_The(jdata, ifile, 1.0, 0.01, 1.0, 0.2)
 
 
-mean_false_rate(int(argv[1]), int(argv[2]))
+main()
+# mean_false_rate(int(argv[1]), int(argv[2]))
