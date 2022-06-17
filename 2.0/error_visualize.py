@@ -1,4 +1,3 @@
-
 import json, numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtk
