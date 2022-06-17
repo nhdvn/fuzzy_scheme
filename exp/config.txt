@@ -1,6 +1,6 @@
 data
-vkyc_the: 512 -> 256 (wave embedding)
-vkyc_nht: 256 -> 256 (feature vector)
+vkyc_the: 512 -> 256 (wave embedding) (vector + id)
+vkyc_nht: 256 -> 256 (feature vector) (id + vector)
 timit_39200:
 timit_47000:
 
