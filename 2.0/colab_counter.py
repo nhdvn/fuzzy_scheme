@@ -10,7 +10,7 @@ k = 1  # number of valid
 users = enumerate_users()
 ulist = list(users.keys())
 
-inter = "/content/drive/MyDrive/Inter/Inter_Timit"
+inter = "/content/drive/MyDrive/Inter/Inter_Timit_47000"
 ibyte = "/content/drive/MyDrive/Entry"
 ifile = "/content/drive/MyDrive/Index"
 ihelp = "/content/drive/MyDrive/Helper"
