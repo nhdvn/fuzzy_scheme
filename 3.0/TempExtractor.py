@@ -7,12 +7,11 @@ class VoiceTemplateLoader:
 
     def __init__(self):
 
-        self.ndata = numpy.genfromtxt("../data/The", delimiter = ',')
+        self.ndata = numpy.genfromtxt("../data/Timit_47000", delimiter=',')
 
         self.dlist = self.enumerate_data()
 
         self.ulist = list(self.dlist.keys())
-
 
     def enumerate_data(self) -> dict:
 
@@ -22,16 +21,15 @@ class VoiceTemplateLoader:
 
             u = int(row[-1])
 
-            if u not in res: res[u] = []
+            if u not in res:
+                res[u] = []
 
             res[u] += [i]
 
         return res
-
 
     def load_user_data(self, uid: int, n: int) -> list:
 
         rlist = self.dlist[uid]
 
         return self.ndata[random.sample(rlist, n)]
-

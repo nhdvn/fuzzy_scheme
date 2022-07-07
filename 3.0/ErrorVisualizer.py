@@ -7,17 +7,15 @@ from CryptoSystem import VoiceCryptoSystem
 class FalseRateTester:
 
     def __init__(self):
-        self.N = 5
-        self.K = 3
-        self.system = VoiceCryptoSystem()    
+        self.N = 2
+        self.K = 1
+        self.system = VoiceCryptoSystem()
         self.module = VoiceTemplateLoader()
         self.out = None
 
-
     def update_output(self, usr, val):
-        
-        self.out.write(f'{usr} {val} \n')
 
+        self.out.write(f'{usr} {val} \n')
 
     def load_test(self, user: int):
 
@@ -30,7 +28,6 @@ class FalseRateTester:
 
         self.out = open(path, 'w')
         return 0
-
 
     def inter_error(self, user: int):
 
@@ -55,7 +52,6 @@ class FalseRateTester:
                 vkey = self.system.verify_user(user, vdat)
                 self.update_output(iv, ukey == vkey)
 
-
     def intra_error(self):
 
         data = self.module.dlist
@@ -64,12 +60,17 @@ class FalseRateTester:
 
         for user in test:
 
-            if len(data[user]) < size: continue
-            
+            if len(data[user]) < size:
+                continue
+
             recv = self.module.load_user_data(user, size)
             udat, vdat = recv[:self.N], recv[self.N:]
             ukey = self.system.enroll_user(user, udat)
             vkey = self.system.verify_user(user, vdat)
 
             print(f'{user} {ukey != vkey}')
-            
+
+
+if __name__ == "__main__":
+    tmp = FalseRateTester()
+    tmp.intra_error()
