@@ -9,7 +9,7 @@ class VoiceCryptoSystem:
 
         self.template_size = 512
         self.reliable_size = 256
-        self.extractor = FuzzyScheme.SampleLock(8, 0.2, 256)
+        self.extractor = FuzzyScheme.SampleLock(4, 0.2, 256)
         self.ivstorage = {}
 
     def enroll_user(self, user: int, vdata: numpy.ndarray):
