@@ -1,11 +1,15 @@
 
 from sys import argv
+
+from numpy import ndarray
 from help_function import *
 from fuzzy_scheme import *
 from error_visualize import *
 
-n = 1  # number of entry
+n = 2  # number of entry
 k = 1  # number of valid
+l = 10
+plot_name = '1_Timit_47000'
 
 
 def mean_error_rate():
@@ -141,32 +145,106 @@ def mean_false_rate(usr_id: int, ip: int):
     return intra, inter
 
 
-name = 'Timit_39201'
+def plot_reliable():
 
-
-def main():
-
-    jdata = '../json/error_' + name + '_reliable_feature.json'
-    ifile = '../plot/plot_' + name + '_reliable_feature.png'
+    jdata = '../json/error_' + plot_name + '_reliable.json'
+    ifile = '../plot/plot_' + plot_name + '_reliable.png'
 
     intra, inter = mean_error_rate()
 
     save_error(intra, inter, jdata)
-    # visualize(jdata, ifile)
-    visualize_The(jdata, ifile, 1.0, 0.01, 1.0, 0.2)
+    visualize_The(jdata, ifile, 1.0, 0.01, 1.0, 0.15)
 
 
-def main_2():
+def plot_full():
 
-    jdata = '../json/error_' + name + '_full_feature.json'
-    ifile = '../plot/plot_' + name + '_full_feature.png'
+    jdata = '../json/error_' + plot_name + '_full.json'
+    ifile = '../plot/plot_' + plot_name + '_full.png'
 
     intra, inter = mean_error_rate_full()
 
     save_error(intra, inter, jdata)
-    visualize_The(jdata, ifile, 1.0, 0.01, 1.0, 0.2)
+    visualize_The(jdata, ifile, 1.0, 0.01, 1.0, 0.15)
 
 
-main()
-main_2()
-# mean_false_rate(int(argv[1]), int(argv[2]))
+def mean_error_rate_random():
+
+    users = enumerate_users()
+
+    intra = []
+    inter = []
+
+    for ix, arr in users.items():
+
+        size = len(arr)
+        if n > size:
+            continue
+
+        entry = udata[arr[:n]]
+        index = reliable_index(entry)
+        entry = reliable_bits(entry, index)
+
+        input = udata[np.random.choice(arr[n:size], k)]
+        input = reliable_bits(input, index)
+        intra += [distance(input, entry)]
+
+        for iv, brr in users.items():
+
+            size = len(brr)
+            if ix == iv:
+                continue
+            if k > size:
+                continue
+
+            input = udata[np.random.choice(brr, k)]
+            input = reliable_bits(input, index)
+            inter += [distance(input, entry)]
+
+    return intra, inter
+
+
+def cal_error_full():
+    intra, inter = mean_error_rate_full()
+
+    cnt_intra = 0
+    for val in intra:
+        if (val > 0.2):
+            cnt_intra += 1
+    print("Full:")
+    print(cnt_intra)
+    print(len(intra))
+
+    cnt_inter = 0
+    for val in inter:
+        if (val < 0.2):
+            cnt_inter += 1
+            print(val)
+    print(cnt_inter)
+    print(len(inter))
+
+
+def cal_error_reliable():
+    print("Reliable:")
+
+    total_inter = 0
+    total_intra = 0
+
+    for _ in range(l):
+        intra, inter = mean_error_rate_random()
+
+        for val in intra:
+            if (val > 0.2):
+                total_intra += 1
+
+        for val in inter:
+            if (val < 0.2):
+                total_inter += 1
+
+    total_intra /= l
+    total_inter /= l
+
+    print(total_intra)
+    print(total_inter)
+
+
+cal_error_reliable()

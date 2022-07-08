@@ -2,7 +2,7 @@
 import json
 import numpy as np
 
-udata = np.genfromtxt('../data/Timit', delimiter=',')
+udata = np.genfromtxt('../data/Timit_47000', delimiter=',')
 
 
 def distance(x, y):  # normalized hamming distance
