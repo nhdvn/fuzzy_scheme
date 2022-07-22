@@ -63,11 +63,16 @@ class FalseRateTester:
             if len(data[user]) < size:
                 continue
 
+            x = 8
+            if (user < x):
+                continue
+
             recv = self.module.load_user_data(user, size)
             udat, vdat = recv[:self.N], recv[self.N:]
             ukey = self.system.enroll_user(user, udat)
             vkey = self.system.verify_user(user, vdat)
 
+            print(vkey)
             print(f'{user} {ukey != vkey}')
 
 

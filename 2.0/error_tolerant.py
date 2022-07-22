@@ -8,7 +8,7 @@ from error_visualize import *
 
 n = 2  # number of entry
 k = 1  # number of valid
-l = 100
+l = 1
 plot_name = '1_Timit_47000'
 
 
@@ -177,28 +177,33 @@ def mean_error_rate_random():
     for ix, arr in users.items():
 
         size = len(arr)
-        if n > size:
-            continue
+        if n + k <= size:
+            s = udata[random.sample(arr, n + k)]
 
-        entry = udata[arr[:n]]
-        index = reliable_index(entry)
-        entry = reliable_bits(entry, index)
+            entry = s[:n]
+            index = reliable_index(entry)
+            entry = reliable_bits(entry, index)
 
-        input = udata[np.random.choice(arr[n:size], k)]
-        input = reliable_bits(input, index)
-        intra += [distance(input, entry)]
-
-        for iv, brr in users.items():
-
-            size = len(brr)
-            if ix == iv:
-                continue
-            if k > size:
-                continue
-
-            input = udata[np.random.choice(brr, k)]
+            input = s[n:]
             input = reliable_bits(input, index)
-            inter += [distance(input, entry)]
+            intra += [distance(input, entry)]
+
+        if n <= size:
+            entry = udata[random.sample(arr, n)]
+            index = reliable_index(entry)
+            entry = reliable_bits(entry, index)
+
+            for iv, brr in users.items():
+
+                size = len(brr)
+                if ix == iv:
+                    continue
+                if k > size:
+                    continue
+
+                input = udata[random.sample(brr, k)]
+                input = reliable_bits(input, index)
+                inter += [distance(input, entry)]
 
     return intra, inter
 
@@ -215,13 +220,15 @@ def mean_error_rate_full_random():
     for ix, arr in users.items():
 
         size = len(arr)
-        if n > size:
+        if n + k > size:
             continue
 
-        entry = udata[arr[:n]]
+        s = udata[random.sample(arr, n + k)]
+
+        entry = s[:n]
         entry = binarization(entry, start, end)
 
-        input = udata[np.random.choice(arr[n:size], k)]
+        input = s[n:]
         input = binarization(input, start, end)
         intra += [distance(input, entry)]
 
@@ -231,7 +238,7 @@ def mean_error_rate_full_random():
             if ix == iv:
                 continue
 
-            input = udata[np.random.choice(brr, k)]
+            input = udata[random.sample(brr, k)]
             input = binarization(input, start, end)
             inter += [distance(input, entry)]
 
@@ -244,8 +251,11 @@ def cal_error_full():
     total_inter = 0
     total_intra = 0
 
-    for _ in range(l):
+    for t in range(l):
         intra, inter = mean_error_rate_full_random()
+        if (t == 0):
+            print(len(intra))
+            print(len(inter))
 
         for val in intra:
             if (val > 0.2):
@@ -265,26 +275,36 @@ def cal_error_full():
 def cal_error_reliable():
     print("Reliable:")
 
-    total_inter = 0
-    total_intra = 0
+    m = 5
+    total_inter = [0, 0, 0, 0, 0]
+    total_intra = [0, 0, 0, 0, 0]
+    threshold = [0.2, 0.23, 0.25, 0.28, 0.3]
 
-    for _ in range(l):
-        intra, inter = mean_error_rate_random()
+    for t in range(l):
+        print(t)
+        intra, inter = mean_error_rate()
+        if (t == 0):
+            print(len(intra))
+            print(len(inter))
 
         for val in intra:
-            if (val > 0.2):
-                total_intra += 1
+            for i in range(m):
+                if (val > threshold[i]):
+                    total_intra[i] += 1
 
         for val in inter:
-            if (val < 0.2):
-                total_inter += 1
+            for i in range(m):
+                if (val < threshold[i]):
+                    total_inter[i] += 1
 
-    total_intra /= l
-    total_inter /= l
+        if (t % 10 == 9):
+            print(t)
+            for i in range(m):
+                print(total_intra[i] / (t + 1))
+            for i in range(m):
+                print(total_inter[i] / (t + 1))
 
-    print(total_intra)
-    print(total_inter)
-
-
-cal_error_full()
-cal_error_reliable()
+        for i in range(m):
+            print(total_intra[i] / (t + 1))
+        for i in range(m):
+            print(total_inter[i] / (t + 1))
